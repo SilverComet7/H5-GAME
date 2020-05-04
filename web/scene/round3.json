@@ -1,0 +1,1 @@
+{"type":"Scene","props":{"width":800,"name":"round3","height":600},"compId":2,"child":[{"type":"Sprite","props":{"y":0,"x":0,"width":7250,"texture":"round3/lanback.png","name":"back","height":800},"compId":4}],"loadList":["round3/lanback.png"],"loadList3D":[]}
