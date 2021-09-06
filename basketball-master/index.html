@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>投篮练习生</title>
+  <style>
+    *{
+      transition: all 2s;
+    }
+    body{
+      display: flex;
+      background-image: url("");
+    }
+    div{
+      position: absolute;
+      left:750px;
+      top:10px;
+    }
+    img{
+      position: absolute;
+      width: 700px;
+      height: 500px;
+    }
+  </style>
+</head>
+<body onload="gameStart()">
+<canvas id="cvs" width="700" height="500" style="border: 1px solid"></canvas>
+<video src="蔡徐坤打篮球原版.mp4" controls="controls" width="500" height="500"></video>
+<div><em><b style="color: red">游戏规则：</b></em>点击播放视频按钮，在坤坤的舞蹈中完成投篮.<br>1:空格控制速度大小，鼠标确定角度 <br>2:坤坤的舞蹈结束后根据你的得分进行评定</div>
+<img src="start.jpg" alt="">
+
+<!--<p>坤坤的力量(作弊器)</p>
+<button>增加篮框大小</button>
+<button>增加篮球速度</button>
+<button>时间无限</button>
+<button>坤坤的扣篮</button>-->
+</body>
+<script>
+  var body = document.getElementsByTagName('body')[0];
+  console.log(body.offsetWidth);
+  var cvs = document.getElementById('cvs');
+  var ctx = cvs.getContext ('2d');
+  var game = null;
+  var timer = null;
+  var loop = null;
+  var num = 0;
+  var temp = 0;
+  var video = document.getElementsByTagName('video')[0];
+  var img = document.getElementsByTagName('img')[0];
+  function gameStart() {
+    video.addEventListener('play',function (){
+      if(num<=0){
+        game = new Game();
+        game.update();
+        img.style.opacity = 0;
+        setTimeout(function () {
+          img.style.zIndex = -1;
+        },2000);
+        num++;
+      }
+      else{
+        if(game.ball.arr.length>0){
+          game.update();
+          clearInterval(timer);
+          timer = setInterval(function () {
+            game.ball.updatePos();
+          },10);
+        }
+        else{
+          game.update();
+        }
+        temp--;
+      }
+    });
+  }
+
+
+  function Game() {
+    var _this = this;
+    this.person = new Person();
+    this.ball = new Ball();
+    this.background = new BackGround();
+    this.update = function () {
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      _this.background.draw();
+      _this.person.draw();
+      _this.ball.draw();
+      loop = window.requestAnimationFrame(_this.update)
+    };
+    video.addEventListener('pause',function (){
+      window.cancelAnimationFrame(loop);
+      clearInterval(timer);
+      temp++;
+    });
+  }
+
+  function Person() {
+    var _this = this;
+    this.positionX = 0;
+    this.positionY = cvs.height-100;
+    this.img = new Image();
+    this.img.src = 'toulanright.png';
+    this.draw = function () {
+      ctx.beginPath();
+      ctx.drawImage(_this.img,_this.positionX,_this.positionY);
+    };
+  }
+
+  function Ball() {
+    var _this = this;
+    this.g = -30;
+    this.angle = -1;
+    this.direction = true;
+    this.t = 0;
+    this.score = 0;
+    this.temp = true;
+    this.img = new Image();
+    this.img.src = 'lanqiu3.png';
+    this.endimg = new Image();
+    this.endimg.src = 'end.png';
+    this.h = 100;
+    this.v = 150;
+    this.positionX = 50;
+    this.positionY = cvs.height-100;
+    this.direction = true;
+    this.arr = [];
+    document.onkeydown = function (ev) {
+      switch (ev.keyCode) {
+        case 32:{
+          if(_this.arr.length <=0&&temp<1){
+            if(_this.direction){
+              _this.v += 5;
+            }
+            else{
+              _this.v -= 5;
+            }
+            if( _this.v>=250|| _this.v<=150){
+              _this.direction = !_this.direction
+            }
+          }
+        }break;
+      }
+      document.onkeyup = function (e) {
+        if(_this.arr.length<=0){
+          if(e.keyCode == 32){
+            cvs.style.pointerEvents = 'none';
+            _this.arr.push({left:_this.positionX,top:_this.positionY,v:_this.v});
+            timer = setInterval(function () {
+              _this.updatePos();
+            },10);
+          }
+        }
+      };
+    };
+    video.addEventListener('ended',function () {
+      window.cancelAnimationFrame(loop);
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.drawImage(_this.endimg,200,200);
+      if(_this.score<=5){
+        ctx.strokeText('时长半年的投篮练习生',100,100);
+      }
+      if(_this.score>=5 && _this.score<=10){
+        ctx.strokeText('时长一年的投篮练习生',100,100)
+      }
+      if(_this.score>10 && _this.score<=15){
+        ctx.strokeText('时长两年的投篮练习生',100,100)
+      }
+      if(_this.score>15){
+        ctx.strokeText('你就是传说中的练习时长两年半的投篮练习生',100,100)
+      }
+      num--;
+    });
+    this.draw = function () {
+      ctx.beginPath();
+      ctx.drawImage(_this.img,_this.positionX,_this.positionY);//画球
+      ctx.beginPath();//计分器
+      ctx.font = '600 30px 隶书';
+      /* ctx.strokeStyle = 'blue';*/
+      ctx.strokeText('score:'+ _this.score,20,20);
+      ctx.beginPath();
+      ctx.fillStyle = 'red';
+      ctx.fillRect(650,400,50,_this.v-150);//右下红色条
+      ctx.beginPath();
+      ctx.strokeRect(650,400,50,100);//右下外边框
+      ctx.fillText(_this.v-150,cvs.width-50,cvs.height-100);//显示力度
+      if(_this.t<=0){
+        ctx.moveTo(_this.positionX,_this.positionY+20);
+        ctx.lineTo(_this.positionX+100*Math.cos(_this.angle),_this.positionY+20+100*Math.sin(_this.angle));
+        ctx.stroke();
+      }//角度指示线
+      ctx.beginPath();
+      ctx.strokeStyle = 'blue';
+      ctx.moveTo(cvs.width,_this.h);
+      ctx.lineTo(cvs.width-50,_this.h);
+      ctx.stroke();//篮球线
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(550,_this.h-50,100,100);
+      ctx.lineWidth = '5';
+      ctx.stroke();//篮球框
+      ctx.restore();
+      cvs.onclick = function (e) {
+        _this.angle = Math.atan2(e.pageY - _this.positionY,e.pageX - _this.positionX);
+        if(_this.angle <= -1.5){
+          _this.angle = -1.5;
+        }
+        if(_this.angle >= 0 ){
+          _this.angle = 0;
+        }
+      };
+    };
+    this.updatePos = function () {
+      _this.t += 0.01;
+      _this.positionX = 50+(_this.v *_this.t*(Math.cos(_this.angle)));
+      _this.positionY = 400 -(-_this.v * _this.t*(Math.sin(_this.angle)) + 1/2*_this.g*_this.t*_this.t);
+      if(ctx.isPointInPath(_this.positionX,_this.positionY)&&_this.temp){
+        _this.score++;
+        _this.temp = false;
+      }
+      if(_this.positionX>=cvs.width-50||_this.positionY<=0||_this.positionY>=cvs.height){
+        clearInterval(timer);
+        _this.arr.shift();
+        _this.positionX = 50;
+        _this.positionY = cvs.height-100;
+        _this.t = 0;
+        _this.temp = true;
+        _this.direction = true;
+        _this.h = parseInt(50+Math.random()*300);
+        _this.v = 150;
+        cvs.style.pointerEvents = 'auto';
+      }
+    };
+  }
+  function BackGround() {
+    var _this = this;
+    this.img = new Image();
+    this.img.src = '开始界面.jpg';
+    this.draw = function () {
+      ctx.beginPath();
+      ctx.drawImage(_this.img,0,0,cvs.width,cvs.height);
+    };
+  }
+</script>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    *{
+      transition: all 2s;
+    }
+    body{
+      width: 100%;
+      height: 100%;
+    }
+    #wrapper{
+      margin: 0 auto;
+      width: 1000px;
+      height: 1000px;
+      display: flex ;
+      flex-wrap : wrap;
+      align-items: center;
+      justify-content: center;
+      align-content: center;
+      position:relative;
+      border: 1px solid black;
+      background: url("1.jpg") ;
+      z-index: 1;
+    }
+    #wrapper div{
+      width: 200px;
+      height: 200px;
+      opacity: 0;
+      /* position: absolute;*/
+    }
+    .box{
+      display: inline-block;
+      left: 0;
+      top: 0;
+      position: relative;
+      transition: all 2s;
+      align-self: center;
+    }
+    .out{
+      position: absolute;
+    }
+    .ine{
+      position: absolute;
+      z-index: -1;
+    }
+    .out img{
+      width: 100%;
+      height: 100%;
+    }
+    .ine img{
+      width: 100%;
+      height: 100%;
+    }
+    @keyframes outback{
+      0%{transform: rotateY(90deg)}
+      50%{transform: rotateY(90deg)}
+      100%{transform: rotateY(0deg)}
+    }
+    @keyframes ineback {
+      0%{transform: rotateY(360deg)}
+      50%{transform: rotateY(270deg)}
+      100%{transform: rotateY(180deg)}
+    }
+    /* @keyframes ineback {
+         0%{transform: rotateY(180deg)}
+         25%{transform: rotateY(270deg)}
+         50%{transform: rotateY(360deg)}
+         75%{transform: rotateY(270deg)}
+         100%{transform: rotateY(180deg)}
+     }*/
+    @keyframes out{
+      0%{transform: rotateY(0deg)}
+      50%{transform: rotateY(90deg)}
+      100%{transform: rotateY(90deg)}
+    }
+    @keyframes ine {
+      0%{transform: rotateY(180deg)}
+      50%{transform: rotateY(270deg)}
+      100%{transform: rotateY(360deg)}
+    }
+    p{
+      font-family: '隶书';
+      font-size: 82px;
+      color: red;
+      position: absolute;
+      align-self: center;
+      /* margin: 0 auto;
+       align :center;*/
+    }
+    button{
+      position: relative;
+      align-self: flex-end;
+      visibility: hidden;
+    }
+    h1{
+      align-self: flex-start;
+      position: absolute;
+      color: red;
+      font-family: 隶书;
+      font-size: 40px;
+      /* top: 0;*/
+    }
+    #span{
+      align-self: flex-start;
+      width: 1000px;
+      height: 20px;
+      background-color: red;
+      position: absolute;
+      font-size: 40px;
+      line-height: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div id="wrapper">
+  <h1>score=</h1>
+  <span id="span">100</span>
+  <!--<div id="timer"></div>-->
+  <!-- <div id="boxout">-->
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div >
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div >
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <!--10------>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <!--15-->
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <div class="box">
+    <div class="out"></div>
+    <div class="ine"></div>
+  </div>
+  <p onclick="start()">start</p>
+  <button onclick="replace()">重置按钮</button>
+  <button onclick="input()">插入图片</button>
+</div>
+</body>
+<script>
+  var wrapper = document.getElementById('wrapper');
+  var divs = wrapper.getElementsByTagName('div');
+  var box = document.getElementsByClassName('box');
+  var out = document.getElementsByClassName('out');
+  var ine = document.getElementsByClassName('ine');
+  var p = document.getElementsByTagName('p')[0];
+  var span = document.getElementById('span');
+  var arr = [];
+  var arr1 =[];
+  var score = 0;
+  var judge = true;
+  //给每个out,ine加上背景,点击实现翻转，判断计分
+  for(var i =0;i<out.length;i++){
+     var img = document.createElement('img');
+     img.src = './' + 2 + '.jpg';
+     out[i].appendChild(img);
+     out[i].onclick = (function (a) {
+      return function(){
+        out[a].style.animation = 'out 2s  both';
+        ine[a].style.animation = 'ine 2s  both';
+        arr1.unshift(a);
+        if(arr1.length%2 == 0)  {
+          setTimeout(function(){
+            for(var i = arr1.length-1;i>0;i=i-2){
+              if(ine[arr1[i]].innerHTML != ine[arr1[i-1]].innerHTML||arr1[i] == arr1[i-1]){
+                out[arr1[i]].style.animation = 'outback 2s both';
+                ine[arr1[i]].style.animation = 'ineback 2s both';
+                out[arr1[i-1]].style.animation = 'outback 2s both';
+                ine[arr1[i-1]].style.animation = 'ineback 2s both';
+                arr1.splice(i-1,2);
+              }
+              else {
+                var temp = 0;
+                var arrtemp =[];
+                out[arr1[i]].style.opacity = 0;
+                ine[arr1[i]].style.opacity = 0;
+                out[arr1[i-1]].style.opacity = 0;
+                ine[arr1[i-1]].style.opacity = 0;
+                score++;
+                arr1.splice(i-1,2);
+                document.getElementsByTagName('h1')[0].innerHTML = 'score='+ score ;
+              /* for(var j=0;j<ine.length;j++){
+                  if(ine[j].style.opacity!=0){
+                    arrtemp.push(ine[j].childNodes[0]);
+                  }
+                }
+                 for(var k =0;k<arrtemp.length;k++){
+                      for(var t=0;t<arrtemp.length;t++){
+                          if(arrtemp[k].src==arrtemp[t].src){
+                            temp = 1;
+                          }
+                      }
+                  }
+                  if(temp==1){
+                     return;
+                  }*/
+                  if(score ==10){
+                      wrapper.style.background = 'url("3.jpg")';
+                      document.getElementsByTagName('h1')[0].innerHTML = '恭喜你通关了';
+                  }
+              }
+            }
+           /* clearTimeout(t);*/
+          },2000);
+        }
+      };
+    })(i);
+  }
+/*  function input(){
+    for(var i=0;i<ine.length;i++){
+      for(var j =0;j<ine.length;j++){
+        if(ine[i].innerHTML==ine[j].innerHTML){
+          temp++;
+        }
+      }
+    }
+  }*/
+  //点击游戏开始
+  function start() {
+    var time = 100;
+    var temp =4;
+    var width = 0;
+    p.style.display = 'none';
+    document.getElementsByTagName('button')[0].style.visibility='visible';
+    document.getElementsByTagName('button')[1].style.visibility='visible';
+    for(var i=0;i<divs.length;i++){
+      divs[i].style.opacity = 1;
+    }
+    for(var j = 0;j<box.length;j++){
+      var obj = {
+        left:box[j].offsetLeft,
+        top:box[j].offsetTop
+      };
+      arr.push(obj) ;
+    }
+    var timer = setInterval(function(){
+      time -=1;
+      width += 10;
+      span.innerHTML = time;
+      span.style.left = width;
+      if(time == 0){
+        clearInterval(timer);
+        wrapper.style.background = 'url("3.jpg")';
+        document.getElementsByTagName('h1')[0].innerHTML = 'gameover' ;
+        for(var i=0;i<divs.length;i++){
+          divs[i].style.opacity = 0;
+        }
+      }
+    },1000);
+    for(var k =0;k<ine.length;k++){
+      var img2 = document.createElement('img');
+      img2.src = './' + temp + '.jpg';
+      ine[k].appendChild(img2);
+      temp +=1;
+      if(temp>8){
+        temp = 4;
+      }
+    }
+    replace();
+  }
+  //为重置做准备
+  Array.prototype.shuffle = function() {
+    var _this = this;
+    for (var i = _this.length-1; i>=0; i--) {
+      var randomIndex = Math.floor(Math.random()*(i));
+      var itemAtIndex = _this[randomIndex];
+      _this [randomIndex] = _this [i];
+      _this [i] = itemAtIndex;
+    }
+    return _this;
+  };
+  //重置
+  function replace() {
+    arr.shuffle();
+    console.log(arr.shuffle());
+    /* arr2.shuffle();*/
+    for(var i = 0;i<box.length;i++){
+     /* console.log(arr[i].left);*/
+      if(0<=i<=4){
+        box[i].style.left = arr[i].left - 200*i + 'px';
+        box[i].style.top =  arr[i].top - 100 +'px';
+      }
+      /*  else if(5<=i<=9){
+            box[i].style.left = arr[i].left - 200*(i-5) + 'px';
+            box[i].style.top =  arr[i].top - 400 +'px';
+        }
+        else{
+            box[i].style.left = arr[i].left - 200*(i-10) + 'px';
+            box[i].style.top =  arr[i].top - 733 +'px';
+        }*/
+    }
+    for(var j = 5;j<10;j++) {
+      box[j].style.left = arr[j].left - 200*(j-5) + 'px';
+      box[j].style.top =  arr[j].top - 300 +'px';
+    }
+    for(var k = 10;k<15;k++) {
+      box[k].style.left = arr[k].left - 200*(k-10) + 'px';
+      box[k].style.top =  arr[k].top - 500 +'px';
+    }
+    for(var t = 15;t<20;t++) {
+      box[t].style.left = arr[t].left - 200*(t-15) + 'px';
+      box[t].style.top =  arr[t].top - 700 +'px';
+    }
+  }
+</script>
+</html>
